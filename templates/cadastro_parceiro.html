@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seja Parceiro - Ivinhema Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { 
+            background-color: #f7f7f7; 
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+        
+        .header-vermelho {
+            background-color: #EA1D2C;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+            border-bottom-left-radius: 50px;
+            border-bottom-right-radius: 50px;
+            margin-bottom: -50px;
+        }
+
+        .card-cadastro {
+            background-color: #ffffff;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        .logo-food {
+            font-weight: 900;
+            font-size: 2.5rem;
+            letter-spacing: -2px;
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #3e3e3e;
+        }
+
+        .form-control, .form-select {
+            border: 1px solid #dcdcdc;
+            border-radius: 10px;
+            padding: 12px;
+        }
+
+        .btn-entrar {
+            background-color: #EA1D2C;
+            border: none;
+            color: white;
+            font-weight: bold;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .btn-entrar:hover {
+            background-color: #c91825;
+            transform: translateY(-2px);
+        }
+
+        .texto-destaque {
+            color: #EA1D2C;
+            font-weight: bold;
+        }
+
+        /* Estilo do Preview do Tema */
+        .preview-tema {
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+            transition: 0.3s;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header-vermelho shadow">
+        <h1 class="logo-food text-uppercase">Ivinhema Food</h1>
+        <p>Aumente suas vendas com o Robô do Delivery!</p>
+    </div>
+
+    <div class="container mb-5" style="margin-top: 80px;">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card-cadastro">
+                    <h4 class="text-center mb-4">Cadastro de <span class="texto-destaque">Parceiro</span></h4>
+                    
+                    <form action="/cadastrar_parceiro" method="POST" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label">Nome da Lanchonete</label>
+                            <input type="text" name="nome" class="form-control" placeholder="Ex: Burguer do João" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cidade</label>
+                            <select name="cidade" class="form-control" required>
+                                <option value="" disabled selected>Selecione a sua cidade...</option>
+                                <option value="Ivinhema">Ivinhema</option>
+                                <option value="Dourados">Dourados</option>
+                                <option value="Naviraí">Naviraí</option>
+                                <option value="Nova Andradina">Nova Andradina</option>
+                                <option value="Angélica">Angélica</option>
+                                <option value="Novo Horizonte">Novo Horizonte</option>
+                                <option value="Deodápolis">Deodápolis</option>
+                            </select>
+                            <small class="text-muted">Selecione onde o seu estabelecimento está localizado.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Foto do Perfil (JPG ou PNG)</label>
+                            <input type="file" name="foto_perfil" class="form-control" accept="image/*">
+                            <small class="text-muted">Selecione a logomarca do seu estabelecimento.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">WhatsApp (para pedidos)</label>
+                            <input type="tel" name="whatsapp" class="form-control" placeholder="67 99999-9999" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Categoria</label>
+                            <select name="categoria" class="form-control" required>
+                                <option value="Lanches">Lanches / Hambúrguer</option>
+                                <option value="Pizza">Pizzaria</option>
+                                <option value="Japonesa">Comida Japonesa</option>
+                                <option value="Doces">Doces e Bolos</option>
+                                <option value="Bebidas">Distribuidora de Bebidas</option>
+                            </select>
+                        </div>
+
+                        <!-- SELETOR DE CORES (TEMA DA LOJA) -->
+                        <div class="mb-3">
+                            <label class="form-label">Estilo Visual (Tema do Cardápio)</label>
+                            <select name="cor_tema" class="form-select" id="cor_tema" onchange="atualizarPreview(this)" required>
+                                <option value="#EA1D2C">🔴 Danger Neon (Vermelho) - Hamburguerias</option>
+                                <option value="#28a745">🟢 Deep Forest (Verde) - Pizzarias</option>
+                                <option value="#ffc107">🟡 Golden Night (Amarelo) - Docerias</option>
+                                <option value="#007bff">🔵 Ocean Blue (Azul) - Sorveterias</option>
+                                <option value="#fd7e14">🟠 Dark Orange (Laranja) - Pastelarias</option>
+                            </select>
+                            <div id="preview-cor" class="preview-tema" style="background-color: #EA1D2C;"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Descrição curta</label>
+                            <textarea name="descricao" class="form-control" rows="3" placeholder="Fale um pouco sobre o que vocês fazem de melhor..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">E-mail de Acesso</label>
+                            <input type="email" name="email" class="form-control" placeholder="exemplo@email.com" required>
+                            <div class="form-text">Este será seu login no sistema.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Senha (mínimo 8 dígitos)</label>
+                            <input type="password" name="senha" class="form-control" 
+                                placeholder="Crie uma senha segura" 
+                                minlength="8" required>
+                            <div class="form-text">Sua senha deve ter pelo menos 8 caracteres.</div>
+                        </div>
+
+                        <div class="d-grid mt-4">
+                            <button type="submit" class="btn btn-entrar">CADASTRAR MEU NEGÓCIO</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="text-center mt-3">
+                    <a href="/vitrine" class="text-muted text-decoration-none small">Ir para a Vitrine</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function atualizarPreview(select) {
+            document.getElementById('preview-cor').style.backgroundColor = select.value;
+        }
+    </script>
+
+</body>
+</html>
