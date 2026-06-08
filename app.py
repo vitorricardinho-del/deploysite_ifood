@@ -18,9 +18,9 @@ app.secret_key = "uma_chave_muito_segura_aqui"
 
 # --- CONFIGURAÇÃO DO SUPABASE E UPLOADS ---
 # Coloque aqui as suas credenciais que usamos nos testes
-SUPABASE_URL = "https://bedtrqqguxvmmjsgrswl.supabase.co"
-SUPABASE_KEY = "sb_publishable_EJP7rwVMNF8jV_WSahcLMA_GXnl4ERq"
-supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 
 def salvar_na_nuvem(arquivo, pasta):
     if not arquivo or arquivo.filename == '':
