@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro Recebido - Food Online</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #000; color: white; font-family: sans-serif; }
+        .espera-container { height: 100vh; display: flex; justify-content: center; align-items: center; text-align: center; }
+        
+        /* MUDANÇA: Borda e sombra alteradas para o vermelho padrão */
+        .card-espera { 
+            background: #111; padding: 40px 30px; border-radius: 15px; 
+            border: 1px solid #EA1D2C; box-shadow: 0 0 20px rgba(234, 29, 44, 0.2); width: 100%; max-width: 500px;
+        }
+        
+        /* MUDANÇA: Efeito neon alterado para vermelho */
+        .neon-text { text-shadow: 0 0 10px #EA1D2C; color: #EA1D2C; font-weight: bold; }
+        
+        /* MUDANÇA: Botão estilizado em preto e vermelho combinando com a vitrine */
+        .btn-mural { background: #222; color: #EA1D2C; border: 1px solid #EA1D2C; padding: 10px 20px; border-radius: 50px; font-weight: bold; text-decoration: none; display: inline-block; transition: 0.3s; }
+        .btn-mural:hover { background: #EA1D2C; color: #000; box-shadow: 0 0 15px #EA1D2C; }
+        
+        /* MUDANÇA: Ajustado tom de cinza das descrições secundárias */
+        .text-white-50 { color: #aaaaaa !important; }
+        .text-muted { color: #777777 !important; }
+    </style>
+</head>
+<body>
+    <div class="espera-container">
+        <div class="card-espera">
+            <span style="font-size: 50px;">⏳</span>
+            <h2 class="neon-text mt-3 mb-3">Cadastro Recebido!</h2>
+            <p class="text-white-50">Sua lanchonete foi registrada com sucesso em nossa base de dados.</p>
+            <p class="mb-4">Para garantir a segurança do aplicativo, nossa equipe administrativa irá analisar os seus dados. Em breve o seu cardápio será liberado para os clientes!</p>
+            
+            <hr style="border-color: #333;">
+            
+            <p class="small text-muted mb-4">Dúvidas? Entre em contato com o suporte do Marketplace MS.</p>
+            <a href="/" class="btn-mural">VOLTAR PARA O INÍCIO</a>
+        </div>
+    </div>
+</body>
+</html>

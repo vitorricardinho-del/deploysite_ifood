@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Montar Cardápio - Ivinhema Food</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f7f7f7; }
+        .card-add { border-radius: 15px; border: 2px dashed #EA1D2C; padding: 20px; background: white; }
+        .btn-proximo { background-color: #28a745; color: white; font-weight: bold; border: none; }
+        .btn-proximo:hover { background-color: #218838; color: white; }
+        .btn-finalizar { background-color: #EA1D2C; color: white; font-weight: bold; text-decoration: none; display: block; text-align: center; padding: 8px; border-radius: 5px; }
+        .btn-finalizar:hover { background-color: #c91825; color: white; }
+        
+        .foto-perfil-loja {
+            width: 80px; height: 80px; object-fit: cover;
+            border-radius: 50%; border: 3px solid #EA1D2C;
+            margin-bottom: 15px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .lista-itens {
+            margin-top: 30px; background: white;
+            border-radius: 15px; padding: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+        }
+        .item-linha {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 10px 0; border-bottom: 1px solid #eee;
+        }
+        .item-linha:last-child { border-bottom: none; }
+        .img-mini { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; margin-right: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            
+            {% if request.args.get('msg') %}
+                <div class="alert alert-success text-center border-0 shadow-sm">
+                    ✅ {{ request.args.get('msg') }}
+                </div>
+            {% endif %}
+
+            <div class="card-add shadow text-center">
+                <<img src="{{ 'https://bedtrqqguxvmmjsgrswl.supabase.co/storage/v1/object/public/food_online/perfis/' + loja['foto_perfil'] if loja['foto_perfil'] else 'https://via.placeholder.com/100?text=LOJA' }}"
+                    class="foto-perfil-loja mx-auto d-block">
+                
+                <h4 class="fw-bold" id="titulo-form">🍔 Itens de {{ loja['nome'] }}</h4>
+                
+                <div class="mb-3 mt-3">
+                    <a href="{{ url_for('cardapio', id=loja['id']) }}" class="btn btn-sm btn-outline-danger" target="_blank">
+                        👁️ Ver como os clientes veem meu cardápio
+                    </a>
+                </div>
+                
+                <hr>
+                
+                <form id="meuForm" action="/cadastrar_item/{{ loja['id'] }}" method="POST" enctype="multipart/form-data" class="text-start">
+                    <input type="hidden" id="item_id" name="item_id">
+                    
+                    <div class="mb-3">
+                        <label class="small fw-bold">Lanchonete:</label>
+                        <select name="lanchonete_id" class="form-select form-select-sm" required>
+                            <option value="{{ loja['id'] }}" selected>{{ loja['nome'] }}</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3 text-center">
+                        <label class="btn btn-outline-secondary btn-sm w-100" id="btn-foto" style="transition: 0.5s; font-weight: bold;">
+                            <span id="texto-foto">📸 Selecionar Foto do Lanche (JPG)</span>
+                            <input type="file" name="foto_item" id="foto_item" hidden accept="image/*" onchange="validarFoto(this)">
+                        </label>
+                    </div>
+
+                    <input type="text" name="nome_item" id="nome_item" class="form-control mb-2" placeholder="Nome do Lanche" required>
+                    
+                    <div class="input-group mb-2">
+                        <span class="input-group-text">R$</span>
+                        <input type="text" name="preco" id="preco_item" class="form-control" placeholder="0,00" oninput="mascaraMoeda(this)" required>
+                    </div>
+                    
+                    <script>
+                    function mascaraMoeda(campo) {
+                        // Remove tudo o que não for dígito
+                        let valor = campo.value.replace(/\D/g, "");
+                        
+                        // Se estiver vazio, define como zero
+                        if (valor === "") valor = "0";
+                        
+                        // Transforma em número decimal dividindo por 100 (para mover a vírgula para os centavos)
+                        valor = (parseFloat(valor) / 100).toFixed(2);
+                        
+                        // Substitui o ponto pela vírgula para exibir no padrão brasileiro
+                        campo.value = valor.replace(".", ",");
+                    }
+                    </script>
+
+
+                    <textarea name="descricao" id="desc_item" class="form-control mb-3" rows="2" placeholder="O que vem no lanche?"></textarea>
+
+                    <button type="submit" id="btn-acao" class="btn btn-proximo w-100 mb-2">
+                        ➕ CADASTRAR E ADICIONAR PRÓXIMO
+                    </button>
+                    
+                    <a href="{{ url_for('cardapio', id=loja['id']) }}" class="btn btn-finalizar w-100">
+                        🏁 FINALIZAR E VER MEU CARDÁPIO
+                    </a>
+                </form>
+            </div>
+
+            <div class="lista-itens mt-4 shadow-sm">
+                <h6 class="fw-bold mb-3">📝 Itens no seu cardápio:</h6>
+                {% if itens %}
+                    {% for item in itens %}
+                    <div class="item-linha">
+                        <div class="d-flex align-items-center">
+                            <img src="{{ url_for('static', filename='uploads/' + item['imagem_url']) if item['imagem_url'] else 'https://via.placeholder.com/50' }}" class="img-mini">
+                            <div>
+                                <div class="fw-bold small">{{ item['nome_item'] }}</div>
+                                <div class="text-danger small">R$ {{ "%.2f"|format(item['preco']) }}</div>
+                            </div>
+                        </div>
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary py-0"
+                                onclick="prepararEdicao('{{ item['id'] }}', '{{ item['nome_item'] }}', '{{ item['preco'] }}', '{{ item['descricao_item'] }}')">
+                                Editar
+                            </button>
+                            
+                            <a href="{{ url_for('excluir_item', item_id=item['id']) }}"
+                                class="btn btn-sm btn-outline-danger py-0"
+                                onclick="return confirm('Apagar este item?')">X</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted small text-center">Nenhum item cadastrado ainda.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function validarFoto(input) {
+        const botao = document.getElementById('btn-foto');
+        const texto = document.getElementById('texto-foto');
+
+        if (input.files && input.files[0]) {
+            botao.classList.remove('btn-outline-secondary');
+            botao.style.backgroundColor = "#28a745";
+            botao.style.color = "white";
+            botao.style.borderColor = "#28a745";
+            texto.innerText = "✅ Foto Carregada: " + input.files[0].name;
+        }
+    }
+
+    function prepararEdicao(id, nome, preco, descricao) {
+        document.getElementById('titulo-form').innerText = "✏️ Editando: " + nome;
+        document.getElementById('btn-acao').innerText = "💾 SALVAR ALTERAÇÕES";
+        document.getElementById('btn-acao').style.backgroundColor = "#007bff";
+        
+        document.getElementById('item_id').value = id;
+        document.getElementById('nome_item').value = nome;
+        document.getElementById('preco_item').value = preco;
+        document.getElementById('desc_item').value = descricao;
+        
+        document.getElementById('meuForm').action = "/editar_item/" + id;
+        
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>

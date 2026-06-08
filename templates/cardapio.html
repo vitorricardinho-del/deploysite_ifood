@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cardápio - {{ lanchonete['nome'] }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* 1. SISTEMA DE CORES DINÂMICAS */
+        :root {
+            /* Puxa a cor do banco (tabela categorias) ou usa o vermelho padrão */
+            --cor-loja: {{ lanchonete['cor_tema'] if lanchonete['cor_tema'] else '#EA1D2C' }};
+            /* Cor de destaque para o texto do preço (sempre amarelo para manter o estilo da imagem) */
+            --cor-detalhe: #fff200;
+        }
+
+        body { background-color: #050505; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; color: white; }
+        
+        /* 2. Topo com Gradiente Dinâmico */
+        .topo-premium { 
+            background: linear-gradient(180deg, var(--cor-loja) 0%, #000 100%); 
+            color: white; 
+            padding: 50px 20px; 
+            text-align: center; 
+            border-bottom: 4px solid var(--cor-detalhe); 
+        }
+
+        /* 3. O Container do Item */
+        .item-container {
+            background: #121212;
+            border-radius: 20px;
+            margin-bottom: 25px;
+            overflow: visible;
+            border: 1px solid #222;
+            position: relative;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 4. O Preço Estilo "Gritante" Dinâmico */
+        .badge-preco-top {
+            background: var(--cor-loja);
+            color: var(--cor-detalhe);
+            font-weight: 900;
+            font-size: 1.8rem;
+            padding: 5px 25px;
+            border-radius: 0 50px 50px 0;
+            position: absolute;
+            left: -10px;
+            top: 10px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 2;
+        }
+
+        /* 5. Foto Circular com Aro Dinâmico */
+        .foto-moldura {
+            width: 120px;
+            height: 120px;
+            border: 5px solid var(--cor-loja);
+            border-radius: 50%;
+            overflow: hidden;
+            flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+        .foto-lanche-img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* 6. Textos e Espaçamento Corrigido */
+        .info-produto { 
+            flex-grow: 1; 
+            padding-left: 20px; 
+            margin-top: 60px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .nome-lanche { 
+            font-weight: 800; 
+            color: #fff; 
+            text-transform: uppercase; 
+            font-size: 1.3rem;
+            line-height: 1.1;
+        }
+
+        .desc-lanche { color: #aaa; font-size: 0.85rem; line-height: 1.2; margin-bottom: 10px; }
+
+        /* 7. Botão Dinâmico */
+        .btn-pedir { 
+            background-color: transparent; 
+            color: var(--cor-detalhe); 
+            border: 1px solid var(--cor-detalhe); 
+            border-radius: 10px; 
+            font-weight: bold; 
+            transition: 0.3s;
+            text-align: center;
+            text-decoration: none;
+        }
+        .btn-pedir:hover { background-color: var(--cor-detalhe); color: #000; }
+
+        .text-warning { color: var(--cor-loja) !important; }
+    </style>
+</head>
+<body>
+
+    <div class="topo-premium shadow">
+        <h1 class="fw-black">{{ lanchonete['nome'] }}</h1>
+        <p class="mb-0 opacity-75">{{ lanchonete['descricao'] }}</p>
+    </div>
+
+    <div class="container mt-5">
+        <h5 class="mb-4 text-warning fw-bold">CARDÁPIO EXCLUSIVO</h5>
+
+        {% for item in itens %}
+        <div class="item-container shadow">
+            <!-- Preço Dinâmico -->
+            <div class="badge-preco-top">
+                <small style="font-size: 0.8rem;">R$</small>{{ "%.0f"|format(item['preco']) }}
+            </div>
+
+            <!-- Informações -->
+            <div class="info-produto">
+                <div class="nome-lanche">{{ item['nome_item'] }}</div>
+                <div class="desc-lanche">{{ item['descricao_item'] }}</div>
+                <a href="https://wa.me/55{{ lanchonete['whatsapp_numero'] }}?text=Olá! Quero o lanche: {{ item['nome_item'] }}" 
+                    target="_blank" class="btn btn-pedir btn-sm">
+                    FAZER PEDIDO
+                </a>
+            </div>
+
+            <!-- Foto Circular Dinâmica -->
+            <div class="foto-moldura">
+                <img src="{{ url_for('static', filename='uploads/' + item['imagem_url']) if item['imagem_url'] else 'https://via.placeholder.com/150' }}" 
+                    class="foto-lanche-img" alt="{{ item['nome_item'] }}">
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>
