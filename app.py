@@ -4,7 +4,7 @@ from datetime import datetime
 import os
 from werkzeug.utils import secure_filename
 # Importando o cliente do Supabase
-from supabase import create_client
+from supabase import create_client, Client
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 import io
