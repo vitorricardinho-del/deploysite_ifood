@@ -359,5 +359,10 @@ def editar_item(item_id):
 
     return redirect(url_for('cadastrar_item', lanchonete_id=id_loja, msg="Item atualizado!"))
 
+# --- INICIALIZAÇÃO DO SERVIDOR BLINDADA PARA O RAILWAY ---
 if __name__ == '__main__':
-    app.run(debug=True)
+    # 🔌 O SENSOR DA PORTA: Puxa a porta que o Railway escolheu na nuvem. Se não achar (no PC), usa a 5000.
+    porta = int(os.environ.get("PORT", 5000))
+    
+    # 🚀 LIBERA O ACESSO: O host='0.0.0.0' abre as portas do container para receber os acessos da internet!
+    app.run(host='0.0.0.0', port=porta, debug=True)
